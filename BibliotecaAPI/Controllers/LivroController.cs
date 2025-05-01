@@ -22,13 +22,8 @@ namespace BibliotecaAPI.Controllers
             var livro = await _context.Livros
                 .Include(l => l.Editora)
                 .Include(l => l.Autor)
-                .FirstAsync();
-                
+                .ToListAsync();
 
-            if (livro == null)
-            {
-                return NotFound();
-            }
             return Ok(livro);
         }
         
@@ -45,14 +40,21 @@ namespace BibliotecaAPI.Controllers
             }
             return Ok(livro);
         }
-        
+
         [HttpPost]
         public async Task<ActionResult<Livro>> PostLivro(Livro livro)
         {
             _context.Livros.Add(livro);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetLivro), new { id = livro.Id }, livro);
+
+            var livroCompleto = await _context.Livros
+                .Include(l => l.Autor)
+                .Include(l => l.Editora)
+                .FirstOrDefaultAsync(l => l.Id == livro.Id);
+
+            return CreatedAtAction(nameof(GetLivro), new { id = livro.Id }, livroCompleto);
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLivro(int id, Livro livro)

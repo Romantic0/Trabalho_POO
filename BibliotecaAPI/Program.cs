@@ -1,26 +1,28 @@
 using Microsoft.EntityFrameworkCore;
-using BibliotecaAPI.Data; 
-
+using BibliotecaAPI.Data;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-    builder.Services.AddDbContext<BibliotecaContext>(options =>
+
+
+builder.Services.AddDbContext<BibliotecaContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
 
 
-// Add services to the container.
-
 builder.Services.AddControllers()
- .AddJsonOptions(options =>
-  {
-      options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-  });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    .AddJsonOptions(options =>
+    {
+    
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true; 
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configuração do ambiente
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -28,7 +30,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

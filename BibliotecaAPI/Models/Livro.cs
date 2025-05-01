@@ -10,6 +10,7 @@ namespace BibliotecaAPI.Models
 
 
         public int AutorId { get; set; }
+        [JsonIgnore]
         public Autor? Autor { get; set; }
 
         public int EditoraId { get; set; }

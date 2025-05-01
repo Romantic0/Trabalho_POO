@@ -16,27 +16,37 @@
                 _context = context;
             }
 
-            [HttpGet]
-            public async Task<ActionResult<IEnumerable<Editora>>> GetEditoras()
-            {
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Editora>>> GetEditoras()
+        {
             return await _context.Editoras
-            .Include(l => l.Livros)
-            .ToListAsync();
-            
-            
+                .Include(e => e.Livros)
+                    .ThenInclude(l => l.Autor)
+                .ToListAsync();
         }
 
-            [HttpGet("{id}")]
-            public async Task<ActionResult<Editora>> GetEditora(int id)
-            {
-                var editora = await _context.Editoras.FindAsync(id);
-                if (editora == null)
-                    return NotFound();
 
-                return editora;
-            }
 
-            [HttpPost]
+
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Editora>> GetEditora(int id)
+        {
+            var editora = await _context.Editoras
+                .Include(e => e.Livros)
+                    .ThenInclude(l => l.Autor)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (editora == null)
+                return NotFound();
+
+            return Ok(editora);
+        }
+
+
+
+        [HttpPost]
             public async Task<ActionResult<Editora>> PostEditora(Editora editora)
             {
                 _context.Editoras.Add(editora);
