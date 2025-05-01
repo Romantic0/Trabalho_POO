@@ -20,11 +20,22 @@
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Editora>>> GetEditoras()
         {
-            return await _context.Editoras
+            var editoras = await _context.Editoras
                 .Include(e => e.Livros)
-                    .ThenInclude(l => l.Autor)
                 .ToListAsync();
+
+            // Preencher a propriedade Editora nos livros (referência inversa)
+            foreach (var editora in editoras)
+            {
+                foreach (var livro in editora.Livros)
+                {
+                    livro.Editora = editora;
+                }
+            }
+
+            return editoras;
         }
+
 
 
 

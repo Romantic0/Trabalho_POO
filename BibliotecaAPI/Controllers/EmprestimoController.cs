@@ -16,14 +16,18 @@ namespace BibliotecaAPI.Controllers
             _context = context;
         }
 
-       
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Emprestimo>>> GetEmprestimos()
         {
-            return await _context.Emprestimos.ToListAsync();
+            return await _context.Emprestimos
+                .Include(e => e.Livro)
+                .ThenInclude(l => l.Editora)
+                .ToListAsync();
         }
 
-        
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Emprestimo>> GetEmprestimo(int id)
         {

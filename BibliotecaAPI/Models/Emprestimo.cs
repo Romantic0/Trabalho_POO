@@ -5,7 +5,7 @@ public class Emprestimo
 {
     public int Id { get; set; }
     public int LivroId { get; set; }
-    [JsonIgnore]
+    
     public Livro? Livro { get; set; } 
 
     public string NomeUsuario { get; set; }
