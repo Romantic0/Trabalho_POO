@@ -24,7 +24,7 @@
                 .Include(e => e.Livros)
                 .ToListAsync();
 
-            // Preencher a propriedade Editora nos livros (referência inversa)
+          
             foreach (var editora in editoras)
             {
                 foreach (var livro in editora.Livros)

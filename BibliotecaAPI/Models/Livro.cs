@@ -16,6 +16,6 @@ namespace BibliotecaAPI.Models
         public int EditoraId { get; set; }
         public Editora? Editora { get; set; }
         [JsonIgnore]
-        public List<Emprestimo>? Emprestimos { get; set; } // Tornar opcional
+        public List<Emprestimo>? Emprestimos { get; set; } 
     }
 }
